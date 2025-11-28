@@ -1,278 +1,527 @@
-<!DOCTYPE html>
 import React, { useState, useEffect } from 'react';
 import { 
   Calculator, 
   Home, 
-  Car, 
-  GraduationCap, 
-  Heart, 
-  TrendingUp, 
+  Info, 
+  Users, 
+  Briefcase, 
   Phone, 
-  Mail, 
+  TrendingUp, 
+  DollarSign, 
+  GraduationCap, 
+  Car, 
+  Heart, 
   MapPin, 
   Menu, 
   X, 
-  Briefcase,
-  Info,
-  UserCheck,
-  IndianRupee
+  Linkedin, 
+  Facebook, 
+  Instagram, 
+  MessageCircle,
+  Moon
 } from 'lucide-react';
 
-/**
- * MOONSHOT FINSERV - Single Page Application
- * Features: Dynamic Logo, Financial Calculators, Compliance Text
- */
+const App = () => {
+  const [activeTab, setActiveTab] = useState('home');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-// --- Components ---
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
-// 1. Navigation Bar
-const Navbar = ({ activeTab, setActiveTab, mobileMenuOpen, setMobileMenuOpen }) => {
-  const navItems = [
-    { id: 'home', label: 'Home', icon: <Home size={18} /> },
-    { id: 'about', label: 'About Us', icon: <Info size={18} /> },
-    { id: 'calculators', label: 'Calculators', icon: <Calculator size={18} /> },
-    { id: 'testimonials', label: 'Testimonials', icon: <UserCheck size={18} /> },
-    { id: 'career', label: 'Career', icon: <Briefcase size={18} /> },
-    { id: 'contact', label: 'Contact', icon: <Phone size={18} /> },
-  ];
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'home': return <HomeTab />;
+      case 'about': return <AboutTab />;
+      case 'calculators': return <CalculatorsTab />;
+      case 'testimonials': return <TestimonialsTab />;
+      case 'career': return <CareerTab />;
+      case 'contact': return <ContactTab />;
+      default: return <HomeTab />;
+    }
+  };
 
   return (
-    <nav className="bg-slate-900 text-white shadow-lg sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-20 items-center">
-          {/* Brand */}
-          <div 
-            className="flex-shrink-0 flex items-center cursor-pointer" 
-            onClick={() => setActiveTab('home')}
-          >
-             <span className="font-bold text-2xl tracking-wider text-yellow-400">MOONSHOT</span>
-             <span className="font-light text-2xl tracking-wider text-white ml-2">FINSERV</span>
-          </div>
+    <div className="min-h-screen bg-slate-50 font-sans text-slate-800 flex flex-col">
+      {/* Navigation */}
+      <nav className="bg-white shadow-md sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-20">
+            <div className="flex items-center">
+              {/* Logo Section - Replace src with your actual image path */}
+              <div className="flex-shrink-0 flex items-center gap-3 cursor-pointer" onClick={() => setActiveTab('home')}>
+                <img 
+                  src="Moonshot_Portrait.jpg" 
+                  alt="Moonshot Finserv Logo" 
+                  className="h-12 w-12 rounded-full object-cover border-2 border-blue-900"
+                  onError={(e) => {
+                    e.target.onerror = null; 
+                    e.target.style.display = 'none'; 
+                    e.target.nextSibling.style.display = 'block';
+                  }}
+                />
+                <Moon className="h-10 w-10 text-blue-900 hidden" /> {/* Fallback Icon */}
+                <div>
+                  <h1 className="text-xl font-bold text-blue-900 tracking-tight">MOONSHOT FINSERV</h1>
+                  <span className="text-xs text-blue-600 font-semibold tracking-wider">WEALTH MANAGEMENT</span>
+                </div>
+              </div>
+            </div>
+            
+            {/* Desktop Menu */}
+            <div className="hidden md:flex items-center space-x-1">
+              <NavButton active={activeTab === 'home'} onClick={() => setActiveTab('home')} icon={<Home size={18} />} label="Home" />
+              <NavButton active={activeTab === 'about'} onClick={() => setActiveTab('about')} icon={<Info size={18} />} label="About" />
+              <NavButton active={activeTab === 'calculators'} onClick={() => setActiveTab('calculators')} icon={<Calculator size={18} />} label="Calculators" />
+              <NavButton active={activeTab === 'testimonials'} onClick={() => setActiveTab('testimonials')} icon={<Users size={18} />} label="Testimonials" />
+              <NavButton active={activeTab === 'career'} onClick={() => setActiveTab('career')} icon={<Briefcase size={18} />} label="Career" />
+              <NavButton active={activeTab === 'contact'} onClick={() => setActiveTab('contact')} icon={<Phone size={18} />} label="Contact" />
+            </div>
 
-          {/* Desktop Menu */}
-          <div className="hidden md:flex space-x-6">
-            {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => setActiveTab(item.id)}
-                className={`flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-                  activeTab === item.id 
-                    ? 'bg-yellow-500 text-slate-900' 
-                    : 'text-slate-300 hover:text-white hover:bg-slate-800'
-                }`}
-              >
-                {item.icon}
-                <span>{item.label}</span>
+            {/* Mobile Menu Button */}
+            <div className="md:hidden flex items-center">
+              <button onClick={toggleMenu} className="text-gray-600 hover:text-blue-900 focus:outline-none">
+                {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
               </button>
-            ))}
-          </div>
-
-          {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center">
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="text-slate-300 hover:text-white p-2"
-            >
-              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Mobile Menu Dropdown */}
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-slate-800">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => {
-                  setActiveTab(item.id);
-                  setMobileMenuOpen(false);
-                }}
-                className={`flex items-center w-full space-x-2 px-3 py-3 rounded-md text-base font-medium ${
-                  activeTab === item.id 
-                    ? 'bg-yellow-500 text-slate-900' 
-                    : 'text-slate-300 hover:text-white hover:bg-slate-700'
-                }`}
-              >
-                {item.icon}
-                <span>{item.label}</span>
-              </button>
-            ))}
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <div className="md:hidden bg-white border-t border-gray-100">
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+              <MobileNavButton active={activeTab === 'home'} onClick={() => { setActiveTab('home'); setIsMenuOpen(false); }} label="Home" />
+              <MobileNavButton active={activeTab === 'about'} onClick={() => { setActiveTab('about'); setIsMenuOpen(false); }} label="About" />
+              <MobileNavButton active={activeTab === 'calculators'} onClick={() => { setActiveTab('calculators'); setIsMenuOpen(false); }} label="Calculators" />
+              <MobileNavButton active={activeTab === 'testimonials'} onClick={() => { setActiveTab('testimonials'); setIsMenuOpen(false); }} label="Testimonials" />
+              <MobileNavButton active={activeTab === 'career'} onClick={() => { setActiveTab('career'); setIsMenuOpen(false); }} label="Career" />
+              <MobileNavButton active={activeTab === 'contact'} onClick={() => { setActiveTab('contact'); setIsMenuOpen(false); }} label="Contact" />
+            </div>
+          </div>
+        )}
+      </nav>
+
+      {/* Main Content */}
+      <main className="flex-grow">
+        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+          {renderContent()}
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-slate-900 text-slate-300 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+              <h3 className="text-white text-lg font-bold mb-4">MOONSHOT FINSERV</h3>
+              <p className="text-sm mb-4">Helping you reach for the moon with your financial goals.</p>
+              <div className="flex space-x-4">
+                <SocialIcon href="#" icon={<Linkedin size={20} />} />
+                <SocialIcon href="#" icon={<Facebook size={20} />} />
+                <SocialIcon href="#" icon={<Instagram size={20} />} />
+              </div>
+            </div>
+            <div>
+              <h3 className="text-white text-lg font-bold mb-4">Quick Links</h3>
+              <ul className="space-y-2 text-sm">
+                <li><button onClick={() => setActiveTab('about')} className="hover:text-white">About Us</button></li>
+                <li><button onClick={() => setActiveTab('calculators')} className="hover:text-white">Financial Calculators</button></li>
+                <li><button onClick={() => setActiveTab('contact')} className="hover:text-white">Contact</button></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-white text-lg font-bold mb-4">Compliance</h3>
+              <p className="text-xs text-gray-400 mb-2">AMFI Registered Mutual Fund Distributor</p>
+              <p className="text-xs text-gray-400 mb-2">ARN: 308898</p>
+              <p className="text-xs text-gray-500 italic mt-4 border-t border-gray-700 pt-4">
+                Disclaimer: Mutual Fund investments are subject to market risks, read all scheme related documents carefully. Past performance is not an indicator of future returns.
+              </p>
+            </div>
+          </div>
+          <div className="mt-8 pt-8 border-t border-gray-700 text-center text-xs text-gray-500">
+            &copy; {new Date().getFullYear()} Moonshot Finserv. All rights reserved.
           </div>
         </div>
-      )}
-    </nav>
-  );
-};
-
-// 2. Animated Logo Component
-const DynamicLogo = () => {
-  return (
-    <div className="relative w-64 md:w-80 mx-auto transition-transform hover:scale-105 duration-300">
-      {/* Main Image */}
-      <img 
-        src="Moonshot_Portrait.jpg" 
-        alt="Moonshot Finserv Logo" 
-        className="w-full h-auto rounded-lg shadow-2xl border-4 border-slate-200"
-      />
-      
-      {/* THE BLINKING EYE LOGIC:
-         We position a small div exactly over the bird's eye.
-         The eye is roughly at 45% left, 38% top based on standard composition of the provided image.
-         The 'eyelid' is a dark circle that blinks (changes opacity) every 3 seconds.
-      */}
-      <div 
-        className="absolute bg-slate-900 rounded-full animate-blink"
-        style={{
-          top: '38%',    // Approximate position of the eye
-          left: '42%',   // Approximate position of the eye
-          width: '3.5%', // Size relative to image
-          height: '2.5%',
-          opacity: 0,    // Invisible when not blinking
-        }}
-      ></div>
-
-      {/* CSS for custom blink animation */}
-      <style>{`
-        @keyframes blink {
-          0%, 48%, 52%, 100% { opacity: 0; }
-          50% { opacity: 1; }
-        }
-        .animate-blink {
-          animation: blink 3s infinite;
-        }
-      `}</style>
+      </footer>
     </div>
   );
 };
 
-// 3. Calculator Components
+// --- Components ---
 
-// Reusable Input Component
-const InputGroup = ({ label, value, onChange, type = "number", prefix = "", suffix = "" }) => (
-  <div className="mb-4">
-    <label className="block text-sm font-medium text-slate-700 mb-1">{label}</label>
-    <div className="relative rounded-md shadow-sm">
-      {prefix && (
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <span className="text-slate-500 sm:text-sm">{prefix}</span>
+const NavButton = ({ active, onClick, icon, label }) => (
+  <button
+    onClick={onClick}
+    className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+      active 
+        ? 'text-blue-900 bg-blue-50' 
+        : 'text-gray-600 hover:text-blue-900 hover:bg-gray-50'
+    }`}
+  >
+    {icon}
+    <span>{label}</span>
+  </button>
+);
+
+const MobileNavButton = ({ active, onClick, label }) => (
+  <button
+    onClick={onClick}
+    className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium ${
+      active 
+        ? 'text-blue-900 bg-blue-50' 
+        : 'text-gray-600 hover:text-blue-900 hover:bg-gray-50'
+    }`}
+  >
+    {label}
+  </button>
+);
+
+const SocialIcon = ({ href, icon }) => (
+  <a href={href} className="text-gray-400 hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">
+    {icon}
+  </a>
+);
+
+// --- TABS ---
+
+const HomeTab = () => (
+  <div className="space-y-12">
+    {/* Hero Section */}
+    <div className="bg-gradient-to-r from-blue-900 to-indigo-800 rounded-2xl overflow-hidden shadow-xl text-white relative">
+      <div className="absolute top-0 right-0 p-12 opacity-10">
+        <Moon size={300} />
+      </div>
+      <div className="relative z-10 px-8 py-16 md:py-24 text-center">
+        <h2 className="text-3xl md:text-5xl font-extrabold mb-6 tracking-tight">
+          Wealth Creation with Purpose
+        </h2>
+        <div className="max-w-3xl mx-auto bg-white/10 backdrop-blur-sm p-8 rounded-xl border border-white/20">
+          <p className="text-xl md:text-2xl font-serif italic mb-4 leading-relaxed">
+            "What is mercy, but the child of love? <br/>
+            What is wealth, but the nurse of mercy?"
+          </p>
+          <p className="text-sm font-medium opacity-80 uppercase tracking-widest">— Thirukural #757</p>
         </div>
-      )}
-      <input
-        type={type}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className={`block w-full rounded-md border-slate-300 py-2 pl-${prefix ? '8' : '3'} pr-${suffix ? '12' : '3'} focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm bg-white border`}
-      />
-      {suffix && (
-        <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-          <span className="text-slate-500 sm:text-sm">{suffix}</span>
+        <div className="mt-10">
+          <p className="text-blue-100 text-lg mb-8 max-w-2xl mx-auto">
+            Achieve your financial dreams while securing your family's future. Start your journey today with Moonshot Finserv.
+          </p>
         </div>
-      )}
+      </div>
+    </div>
+
+    {/* Quick Feature Highlights */}
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex flex-col items-center text-center">
+        <div className="p-3 bg-blue-100 rounded-full text-blue-900 mb-4"><TrendingUp /></div>
+        <h3 className="font-bold text-lg mb-2">Step-Up SIP</h3>
+        <p className="text-slate-600 text-sm">Start small and grow your investments as your income grows.</p>
+      </div>
+      <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex flex-col items-center text-center">
+        <div className="p-3 bg-green-100 rounded-full text-green-900 mb-4"><DollarSign /></div>
+        <h3 className="font-bold text-lg mb-2">Micro Investing</h3>
+        <p className="text-slate-600 text-sm">Start your Systematic Investment Plan (SIP) with as low as ₹100.</p>
+      </div>
+      <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex flex-col items-center text-center">
+        <div className="p-3 bg-indigo-100 rounded-full text-indigo-900 mb-4"><Users /></div>
+        <h3 className="font-bold text-lg mb-2">Expert Guidance</h3>
+        <p className="text-slate-600 text-sm">Personalized financial planning for every life stage.</p>
+      </div>
     </div>
   </div>
 );
 
-// Generic Future Value Calculator (used for goals)
-const GoalCalculator = ({ title, icon, defaultCost }) => {
-  const [currentCost, setCurrentCost] = useState(defaultCost);
-  const [years, setYears] = useState(10);
-  const [inflation, setInflation] = useState(6);
-  const [returnRate, setReturnRate] = useState(12);
+const AboutTab = () => (
+  <div className="max-w-4xl mx-auto">
+    <div className="bg-white rounded-2xl shadow-sm p-8 md:p-12 mb-8">
+      <h2 className="text-3xl font-bold text-slate-800 mb-6 border-b pb-4">About Moonshot Finserv</h2>
+      <p className="text-lg text-slate-600 mb-8 leading-relaxed">
+        At Moonshot Finserv, we are dedicated to helping our clients achieve their life's financial goals through strategic Mutual Fund investments. We believe that financial freedom is not just about having money, but about having the peace of mind to enjoy life's precious moments.
+      </p>
 
-  const futureCost = currentCost * Math.pow((1 + inflation / 100), years);
-  // Monthly SIP needed to reach Future Cost
-  // Formula: PMT = FV * i / ((1+i)^n - 1) * (1+i) -- assuming investment at start of month
-  const monthlyRate = returnRate / 12 / 100;
-  const months = years * 12;
-  const sipNeeded = (futureCost * monthlyRate) / ((Math.pow(1 + monthlyRate, months) - 1) * (1 + monthlyRate));
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+        <div>
+          <h3 className="text-xl font-semibold text-blue-900 mb-4 flex items-center gap-2">
+            <TrendingUp size={20} /> Our Services
+          </h3>
+          <ul className="space-y-3 text-slate-600">
+            <li className="flex items-start gap-2"><span className="text-blue-500 mt-1">•</span> Buying New Vehicle</li>
+            <li className="flex items-start gap-2"><span className="text-blue-500 mt-1">•</span> Dream Home Purchase</li>
+            <li className="flex items-start gap-2"><span className="text-blue-500 mt-1">•</span> Kids' Education Planning</li>
+            <li className="flex items-start gap-2"><span className="text-blue-500 mt-1">•</span> Marriage Expenses</li>
+            <li className="flex items-start gap-2"><span className="text-blue-500 mt-1">•</span> Family Tour Funds</li>
+            <li className="flex items-start gap-2"><span className="text-blue-500 mt-1">•</span> Pension & Retirement Planning</li>
+          </ul>
+        </div>
+        
+        <div className="bg-slate-50 p-6 rounded-xl border border-slate-200">
+          <h3 className="text-xl font-semibold text-blue-900 mb-4">Why Choose Us?</h3>
+          <div className="space-y-4">
+             <div className="flex items-start gap-3">
+              <div className="bg-green-100 p-2 rounded-full text-green-700 font-bold text-xs">₹100</div>
+              <div>
+                <h4 className="font-medium text-slate-800">Start Small</h4>
+                <p className="text-sm text-slate-600">We help you start SIPs as low as ₹100/month.</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="bg-blue-100 p-2 rounded-full text-blue-700"><Briefcase size={16} /></div>
+              <div>
+                <h4 className="font-medium text-slate-800">Professional & Compliant</h4>
+                <p className="text-sm text-slate-600">AMFI Registered Distributor.</p>
+                <p className="text-sm font-bold text-blue-900 mt-1">ARN: 308898</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const CalculatorsTab = () => {
+  const [activeCalc, setActiveCalc] = useState('sip');
+
+  const calculators = [
+    { id: 'sip', name: 'Step-up SIP', icon: <TrendingUp size={18} /> },
+    { id: 'lumpsum', name: 'Lumpsum', icon: <DollarSign size={18} /> },
+    { id: 'vehicle', name: 'Dream Vehicle', icon: <Car size={18} /> },
+    { id: 'home', name: 'Dream Home', icon: <Home size={18} /> },
+    { id: 'education', name: 'Education', icon: <GraduationCap size={18} /> },
+    { id: 'marriage', name: 'Marriage', icon: <Heart size={18} /> },
+  ];
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow-md border-t-4 border-indigo-500">
-      <div className="flex items-center mb-4 text-indigo-700">
-        {icon}
-        <h3 className="text-xl font-bold ml-2">{title}</h3>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <InputGroup label="Current Cost" value={currentCost} onChange={setCurrentCost} prefix="₹" />
-          <InputGroup label="Years to Goal" value={years} onChange={setYears} suffix="Yrs" />
-          <InputGroup label="Expected Inflation" value={inflation} onChange={setInflation} suffix="%" />
-          <InputGroup label="Exp. Investment Return" value={returnRate} onChange={setReturnRate} suffix="%" />
+    <div className="flex flex-col md:flex-row gap-8">
+      {/* Sidebar / Menu */}
+      <div className="md:w-64 flex-shrink-0">
+        <div className="bg-white rounded-xl shadow-sm p-4 sticky top-24">
+          <h3 className="font-bold text-lg text-slate-800 mb-4 px-2">Calculators</h3>
+          <div className="space-y-1">
+            {calculators.map(calc => (
+              <button
+                key={calc.id}
+                onClick={() => setActiveCalc(calc.id)}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                  activeCalc === calc.id 
+                    ? 'bg-blue-900 text-white shadow-md' 
+                    : 'text-slate-600 hover:bg-slate-50'
+                }`}
+              >
+                {calc.icon}
+                {calc.name}
+              </button>
+            ))}
+          </div>
         </div>
-        <div className="bg-slate-50 p-4 rounded-lg flex flex-col justify-center items-center text-center">
-          <p className="text-sm text-slate-500">Projected Cost in {years} Years</p>
-          <p className="text-2xl font-bold text-slate-800 my-2">₹ {Math.round(futureCost).toLocaleString('en-IN')}</p>
-          <div className="w-full h-px bg-slate-300 my-3"></div>
-          <p className="text-sm text-slate-500">SIP Required to achieve this</p>
-          <p className="text-xl font-bold text-green-600">₹ {Math.round(sipNeeded).toLocaleString('en-IN')}<span className="text-xs text-slate-400">/mo</span></p>
+      </div>
+
+      {/* Calculator Area */}
+      <div className="flex-grow">
+        <div className="bg-white rounded-xl shadow-sm p-6 md:p-8 border border-slate-100">
+          {activeCalc === 'sip' && <StepUpSIPCalculator />}
+          {activeCalc === 'lumpsum' && <LumpsumCalculator />}
+          {activeCalc === 'vehicle' && <GoalCalculator title="Dream Vehicle" icon={<Car />} defaultCost={1000000} defaultYears={5} />}
+          {activeCalc === 'home' && <GoalCalculator title="Dream Home" icon={<Home />} defaultCost={5000000} defaultYears={10} />}
+          {activeCalc === 'education' && <GoalCalculator title="Child Education" icon={<GraduationCap />} defaultCost={2500000} defaultYears={15} />}
+          {activeCalc === 'marriage' && <GoalCalculator title="Marriage Expense" icon={<Heart />} defaultCost={1500000} defaultYears={10} />}
         </div>
       </div>
     </div>
   );
 };
 
-const SIPCalculator = () => {
+const TestimonialsTab = () => (
+  <div className="max-w-5xl mx-auto">
+    <h2 className="text-3xl font-bold text-center text-slate-800 mb-12">What Our Clients Say</h2>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <TestimonialCard 
+        name="Rajesh Kumar" 
+        role="IT Professional"
+        text="I started my SIP journey with Moonshot Finserv 3 years ago. Their guidance on step-up SIPs helped me build a corpus for my car without any loan. Truly grateful!" 
+      />
+      <TestimonialCard 
+        name="Priya Sharma" 
+        role="Doctor"
+        text="The retirement planning advice I received was eye-opening. They broke down the complex calculations into simple steps. Highly recommended." 
+      />
+      <TestimonialCard 
+        name="Senthil Nathan" 
+        role="Business Owner"
+        text="I used to keep money in savings accounts. Moonshot showed me the power of compounding. My portfolio is now beating inflation consistently." 
+      />
+      <TestimonialCard 
+        name="Anitha Reddy" 
+        role="Teacher"
+        text="I started with just ₹500/month for my daughter's education. Their support for small investors is what makes them unique." 
+      />
+    </div>
+  </div>
+);
+
+const TestimonialCard = ({ name, role, text }) => (
+  <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 relative">
+    <div className="text-4xl text-blue-200 absolute top-4 left-4 font-serif">"</div>
+    <p className="text-slate-600 mb-6 pt-6 relative z-10 italic">{text}</p>
+    <div className="flex items-center gap-3">
+      <div className="h-10 w-10 rounded-full bg-slate-200 flex items-center justify-center font-bold text-slate-500">
+        {name[0]}
+      </div>
+      <div>
+        <h4 className="font-bold text-slate-800 text-sm">{name}</h4>
+        <p className="text-xs text-slate-500">{role}</p>
+      </div>
+    </div>
+  </div>
+);
+
+const CareerTab = () => (
+  <div className="max-w-2xl mx-auto text-center">
+    <div className="bg-white p-8 md:p-12 rounded-2xl shadow-sm border border-slate-100">
+      <Briefcase size={48} className="mx-auto text-blue-900 mb-6" />
+      <h2 className="text-3xl font-bold text-slate-800 mb-4">Join Our Team</h2>
+      <p className="text-slate-600 mb-8">
+        We are always looking for passionate individuals who want to make a difference in people's financial lives. If you are driven, ethical, and eager to learn about wealth management, we'd love to hear from you.
+      </p>
+      <div className="bg-slate-50 p-6 rounded-lg text-left mb-8">
+        <h3 className="font-bold text-slate-800 mb-2">Current Openings:</h3>
+        <ul className="list-disc list-inside text-slate-600 text-sm space-y-2">
+          <li>Financial Advisor Trainee</li>
+          <li>Customer Relationship Manager</li>
+          <li>Mutual Fund Operations Executive</li>
+        </ul>
+      </div>
+      <a href="mailto:hub2ms@gmail.com" className="inline-block bg-blue-900 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-800 transition-colors">
+        Send Your Resume
+      </a>
+    </div>
+  </div>
+);
+
+const ContactTab = () => (
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+    <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
+      <h2 className="text-2xl font-bold text-slate-800 mb-6">Get in Touch</h2>
+      <div className="space-y-6">
+        <ContactItem icon={<MessageCircle className="text-green-500" />} label="WhatsApp" value="+91 8939 124 816" link="https://wa.me/+918939124816" />
+        <ContactItem icon={<Phone className="text-blue-500" />} label="Mobile" value="+91 8939 124 816" link="tel:+918939124816" />
+        <ContactItem icon={<DollarSign className="text-red-500" />} label="Email" value="hub2ms@gmail.com" link="mailto:hub2ms@gmail.com" />
+        <ContactItem icon={<MapPin className="text-purple-500" />} label="Location" value="Erode, India" link="https://maps.app.goo.gl/QnLKbGPgBcz7G2C6A" />
+      </div>
+
+      <div className="mt-8 pt-8 border-t">
+        <h3 className="font-semibold text-slate-800 mb-4">Connect on Social Media</h3>
+        <div className="flex gap-4">
+          <a href="#" className="bg-blue-50 p-3 rounded-full text-blue-700 hover:bg-blue-100 transition-colors"><Linkedin /></a>
+          <a href="#" className="bg-blue-50 p-3 rounded-full text-blue-700 hover:bg-blue-100 transition-colors"><Facebook /></a>
+          <a href="#" className="bg-pink-50 p-3 rounded-full text-pink-600 hover:bg-pink-100 transition-colors"><Instagram /></a>
+        </div>
+      </div>
+    </div>
+
+    <div className="bg-slate-200 rounded-2xl overflow-hidden min-h-[400px] relative">
+      {/* Placeholder for Google Map embed */}
+      <div className="absolute inset-0 flex items-center justify-center bg-slate-100">
+         <div className="text-center p-6">
+           <MapPin size={48} className="mx-auto text-slate-400 mb-2" />
+           <p className="text-slate-500 font-medium">Map View</p>
+           <a href="https://maps.app.goo.gl/QnLKbGPgBcz7G2C6A" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline mt-2 inline-block">
+             Open in Google Maps
+           </a>
+         </div>
+      </div>
+    </div>
+  </div>
+);
+
+const ContactItem = ({ icon, label, value, link }) => (
+  <div className="flex items-center gap-4">
+    <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center">
+      {icon}
+    </div>
+    <div>
+      <p className="text-xs text-slate-500">{label}</p>
+      <a href={link} target="_blank" rel="noopener noreferrer" className="font-medium text-slate-800 hover:text-blue-900">
+        {value}
+      </a>
+    </div>
+  </div>
+);
+
+// --- CALCULATOR LOGIC ---
+
+const InputField = ({ label, value, onChange, type = "number", prefix = "", suffix = "" }) => (
+  <div className="mb-4">
+    <label className="block text-sm font-medium text-slate-700 mb-1">{label}</label>
+    <div className="relative rounded-md shadow-sm">
+      {prefix && <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><span className="text-gray-500 sm:text-sm">{prefix}</span></div>}
+      <input
+        type={type}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className={`focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md p-2 border ${prefix ? 'pl-8' : ''} ${suffix ? 'pr-8' : ''}`}
+      />
+      {suffix && <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"><span className="text-gray-500 sm:text-sm">{suffix}</span></div>}
+    </div>
+  </div>
+);
+
+const StepUpSIPCalculator = () => {
   const [investment, setInvestment] = useState(5000);
-  const [years, setYears] = useState(10);
   const [rate, setRate] = useState(12);
-  const [stepUp, setStepUp] = useState(10); // Annual Step up %
+  const [years, setYears] = useState(10);
+  const [stepUp, setStepUp] = useState(10);
+  const [result, setResult] = useState(null);
 
-  const calculateStepUpSIP = () => {
-    let totalAmount = 0;
-    let currentMonthlySip = parseFloat(investment);
+  const calculate = () => {
+    let monthlyRate = rate / 12 / 100;
+    let months = years * 12;
+    let currentMonthlyInv = parseFloat(investment);
+    let totalValue = 0;
     let totalInvested = 0;
-    const monthlyRate = rate / 100 / 12;
 
-    for (let i = 1; i <= years; i++) {
-      // For each year
-      for (let m = 1; m <= 12; m++) {
-        const monthsRemaining = ((years - i) * 12) + (12 - m + 1); // approximate simple compounding logic for display
-        // Standard FV of a single installment: P * (1+r)^t
-        // But for total corpus, we compound the accumulation.
-        // Simplified Logic: 
-        totalInvested += currentMonthlySip;
-        totalAmount = (totalAmount + currentMonthlySip) * (1 + monthlyRate);
+    for (let i = 1; i <= months; i++) {
+      // Add investment
+      totalValue += currentMonthlyInv;
+      totalInvested += currentMonthlyInv;
+      
+      // Add interest for this month
+      totalValue += totalValue * monthlyRate;
+
+      // Annual Step Up
+      if (i % 12 === 0) {
+        currentMonthlyInv += currentMonthlyInv * (stepUp / 100);
       }
-      // Increase SIP for next year
-      currentMonthlySip = currentMonthlySip * (1 + stepUp / 100);
     }
-    return { totalInvested, totalAmount };
+    setResult({ invested: Math.round(totalInvested), value: Math.round(totalValue) });
   };
 
-  const { totalInvested, totalAmount } = calculateStepUpSIP();
-
   return (
-    <div className="bg-white p-6 rounded-xl shadow-md border-t-4 border-green-500 col-span-1 md:col-span-2">
-      <div className="flex items-center mb-4 text-green-700">
-        <TrendingUp size={24} />
-        <h3 className="text-xl font-bold ml-2">Step-Up SIP Calculator</h3>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="md:col-span-1 space-y-2">
-          <InputGroup label="Monthly Investment" value={investment} onChange={setInvestment} prefix="₹" />
-          <InputGroup label="Annual Step-up" value={stepUp} onChange={setStepUp} suffix="%" />
-          <InputGroup label="Duration" value={years} onChange={setYears} suffix="Years" />
-          <InputGroup label="Expected Return" value={rate} onChange={setRate} suffix="%" />
+    <div>
+      <h3 className="text-xl font-bold text-blue-900 mb-6 flex items-center gap-2"><TrendingUp /> Step-Up SIP Calculator</h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="space-y-4">
+          <InputField label="Monthly Investment" value={investment} onChange={setInvestment} prefix="₹" />
+          <InputField label="Expected Return Rate (p.a)" value={rate} onChange={setRate} suffix="%" />
+          <InputField label="Time Period" value={years} onChange={setYears} suffix="Years" />
+          <InputField label="Annual Step-up" value={stepUp} onChange={setStepUp} suffix="%" />
+          <button onClick={calculate} className="w-full bg-blue-900 text-white py-3 rounded-lg hover:bg-blue-800 transition-colors">Calculate</button>
         </div>
-        <div className="md:col-span-2 flex flex-col justify-center">
-           <div className="grid grid-cols-2 gap-4 mb-4">
-             <div className="bg-slate-50 p-4 rounded text-center">
-               <p className="text-slate-500 text-sm">Invested Amount</p>
-               <p className="text-lg font-semibold text-slate-800">₹ {Math.round(totalInvested).toLocaleString('en-IN')}</p>
-             </div>
-             <div className="bg-green-50 p-4 rounded text-center border border-green-100">
-               <p className="text-green-600 text-sm">Wealth Gained</p>
-               <p className="text-lg font-semibold text-green-700">₹ {Math.round(totalAmount - totalInvested).toLocaleString('en-IN')}</p>
-             </div>
-           </div>
-           <div className="bg-indigo-900 text-white p-6 rounded-lg text-center shadow-lg">
-             <p className="text-indigo-200 uppercase tracking-wide text-xs font-bold mb-1">Total Corpus Value</p>
-             <p className="text-3xl font-bold">₹ {Math.round(totalAmount).toLocaleString('en-IN')}</p>
-           </div>
+        <div className="bg-slate-50 p-6 rounded-xl flex flex-col justify-center items-center text-center">
+          {!result ? <p className="text-slate-500">Enter details to see projection</p> : (
+            <div className="w-full space-y-4">
+              <div>
+                <p className="text-sm text-slate-500">Total Invested</p>
+                <p className="text-2xl font-bold text-slate-700">₹ {result.invested.toLocaleString()}</p>
+              </div>
+              <div>
+                <p className="text-sm text-slate-500">Future Value</p>
+                <p className="text-4xl font-extrabold text-green-600">₹ {result.value.toLocaleString()}</p>
+              </div>
+              <div className="text-xs text-slate-400 mt-4">
+                *Projections are based on assumed rate of return.
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -281,282 +530,110 @@ const SIPCalculator = () => {
 
 const LumpsumCalculator = () => {
   const [investment, setInvestment] = useState(100000);
-  const [years, setYears] = useState(10);
   const [rate, setRate] = useState(12);
+  const [years, setYears] = useState(10);
+  const [result, setResult] = useState(null);
 
-  const value = investment * Math.pow((1 + rate/100), years);
-
-  return (
-    <div className="bg-white p-6 rounded-xl shadow-md border-t-4 border-blue-500">
-      <div className="flex items-center mb-4 text-blue-700">
-        <IndianRupee size={24} />
-        <h3 className="text-xl font-bold ml-2">Lumpsum Calculator</h3>
-      </div>
-      <InputGroup label="Total Investment" value={investment} onChange={setInvestment} prefix="₹" />
-      <InputGroup label="Duration" value={years} onChange={setYears} suffix="Years" />
-      <InputGroup label="Expected Return" value={rate} onChange={setRate} suffix="%" />
-      
-      <div className="mt-4 pt-4 border-t border-slate-100">
-        <p className="text-sm text-slate-500">Future Value</p>
-        <p className="text-2xl font-bold text-blue-600">₹ {Math.round(value).toLocaleString('en-IN')}</p>
-      </div>
-    </div>
-  );
-};
-
-
-// 4. Main Page Content Sections
-
-const HomeSection = ({ setActiveTab }) => (
-  <div className="flex flex-col items-center justify-center py-12 md:py-20 text-center space-y-8 animate-fadeIn">
-    <DynamicLogo />
-    <div className="max-w-2xl px-4">
-      <h1 className="text-4xl md:text-6xl font-extrabold text-slate-800 mb-4">
-        Aim for the <span className="text-yellow-500">Moon</span>
-      </h1>
-      <p className="text-xl text-slate-600 mb-8 leading-relaxed">
-        Your trusted partner in Mutual Fund Distribution. We help you navigate the financial cosmos to reach your life goals with precision and care.
-      </p>
-      <div className="flex flex-col sm:flex-row gap-4 justify-center">
-        <button 
-          onClick={() => setActiveTab('calculators')}
-          className="px-8 py-3 bg-indigo-600 text-white rounded-full font-bold shadow-lg hover:bg-indigo-700 transition transform hover:-translate-y-1"
-        >
-          Plan Your Goal
-        </button>
-        <button 
-          onClick={() => setActiveTab('contact')}
-          className="px-8 py-3 bg-white text-indigo-600 border-2 border-indigo-600 rounded-full font-bold shadow-sm hover:bg-indigo-50 transition"
-        >
-          Contact Us
-        </button>
-      </div>
-    </div>
-  </div>
-);
-
-const AboutSection = () => (
-  <div className="max-w-4xl mx-auto py-12 px-4">
-    <h2 className="text-3xl font-bold text-slate-800 mb-6 border-b-4 border-yellow-400 inline-block">About Moonshot Finserv</h2>
-    <div className="bg-white rounded-lg shadow-md p-8 text-slate-700 leading-relaxed space-y-4">
-      <p>
-        Welcome to <strong>Moonshot Finserv</strong>. We are a premier Mutual Fund Distributor dedicated to simplifying the complex world of investments for our clients.
-      </p>
-      <p>
-        Just like the bird in our logo sits patiently under the moonlight, we believe in the power of patience and consistency in investing. Our "eyes" are always open, monitoring the market dynamics (blinking every 3 seconds to stay sharp!) to ensure your portfolio remains healthy.
-      </p>
-      <p>
-        <strong>Our Mission:</strong> To empower every Indian family to achieve financial freedom through disciplined investing in Mutual Funds.
-      </p>
-      <div>
-        <strong>Why Choose Us?</strong>
-        <ul className="list-disc ml-6 mt-2 space-y-1">
-          <li>AMFI Registered Distributor.</li>
-          <li>Personalized Goal Planning (Education, Marriage, Retirement).</li>
-          <li>Unbiased fund selection based on research.</li>
-          <li>Complete transparency and digital onboarding.</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-);
-
-const CalculatorsSection = () => (
-  <div className="max-w-6xl mx-auto py-12 px-4">
-    <div className="text-center mb-12">
-      <h2 className="text-3xl font-bold text-slate-800">Financial Tools</h2>
-      <p className="text-slate-500 mt-2">Plan your future with our inflation-adjusted calculators</p>
-    </div>
-    
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-      <SIPCalculator />
-      <LumpsumCalculator />
-      <GoalCalculator 
-        title="Dream Vehicle" 
-        icon={<Car size={24} />} 
-        defaultCost={1500000} 
-      />
-      <GoalCalculator 
-        title="Dream Home" 
-        icon={<Home size={24} />} 
-        defaultCost={5000000} 
-      />
-      <GoalCalculator 
-        title="Children's Education" 
-        icon={<GraduationCap size={24} />} 
-        defaultCost={2000000} 
-      />
-      <GoalCalculator 
-        title="Marriage Expense" 
-        icon={<Heart size={24} />} 
-        defaultCost={2500000} 
-      />
-    </div>
-  </div>
-);
-
-const TestimonialsSection = () => {
-  const reviews = [
-    { name: "Rahul Sharma", text: "Moonshot Finserv helped me plan my daughter's education fund perfectly. The step-up SIP advice was a game changer.", role: "IT Professional" },
-    { name: "Priya Patel", text: "I was confused about where to invest my bonus. Their lumpsum calculator and personal guidance gave me clarity.", role: "Doctor" },
-    { name: "Vikram Singh", text: "Excellent service and very transparent. I love their approach to long-term wealth creation.", role: "Entrepreneur" }
-  ];
-
-  return (
-    <div className="max-w-5xl mx-auto py-12 px-4">
-       <h2 className="text-3xl font-bold text-slate-800 mb-8 text-center">What Clients Say</h2>
-       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-         {reviews.map((r, i) => (
-           <div key={i} className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
-             <div className="flex justify-center -mt-10 mb-4">
-                <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-500 font-bold text-2xl">
-                  {r.name.charAt(0)}
-                </div>
-             </div>
-             <p className="text-slate-600 italic text-center mb-4">"{r.text}"</p>
-             <div className="text-center">
-               <p className="font-bold text-slate-900">{r.name}</p>
-               <p className="text-xs text-slate-500 uppercase">{r.role}</p>
-             </div>
-           </div>
-         ))}
-       </div>
-    </div>
-  );
-};
-
-const CareerSection = () => (
-  <div className="max-w-4xl mx-auto py-12 px-4">
-    <h2 className="text-3xl font-bold text-slate-800 mb-6">Join Our Team</h2>
-    <div className="bg-white p-8 rounded-lg shadow-md">
-      <p className="text-lg text-slate-700 mb-6">
-        Are you passionate about finance and helping people achieve their dreams? We are looking for energetic individuals to join Moonshot Finserv.
-      </p>
-      <div className="space-y-4">
-        <div className="border border-slate-200 p-4 rounded hover:bg-slate-50">
-          <h3 className="font-bold text-indigo-700">Relationship Manager</h3>
-          <p className="text-sm text-slate-500">Experience: 1-3 Years | Location: Hybrid</p>
-          <p className="mt-2 text-slate-600">Manage client portfolios and provide mutual fund advisory.</p>
-        </div>
-        <div className="border border-slate-200 p-4 rounded hover:bg-slate-50">
-          <h3 className="font-bold text-indigo-700">Operations Executive</h3>
-          <p className="text-sm text-slate-500">Experience: Fresher/1 Year | Location: Office</p>
-          <p className="mt-2 text-slate-600">Handle backend operations, KYCs, and transaction processing.</p>
-        </div>
-      </div>
-      <div className="mt-8 text-center">
-        <p className="font-medium text-slate-800">Send your resume to:</p>
-        <a href="mailto:careers@moonshotfinserv.com" className="text-indigo-600 font-bold text-lg hover:underline">careers@moonshotfinserv.com</a>
-      </div>
-    </div>
-  </div>
-);
-
-const ContactSection = () => (
-  <div className="max-w-4xl mx-auto py-12 px-4">
-    <h2 className="text-3xl font-bold text-slate-800 mb-6">Get In Touch</h2>
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <div className="bg-indigo-900 text-white p-8 rounded-lg shadow-lg">
-        <h3 className="text-xl font-bold mb-6">Contact Information</h3>
-        <div className="space-y-6">
-           <div className="flex items-start">
-             <MapPin className="mr-4 text-yellow-400" />
-             <p>123, Financial District, Main Road,<br/>City Center, Mumbai - 400001</p>
-           </div>
-           <div className="flex items-center">
-             <Phone className="mr-4 text-yellow-400" />
-             <p>+91 98765 43210</p>
-           </div>
-           <div className="flex items-center">
-             <Mail className="mr-4 text-yellow-400" />
-             <p>connect@moonshotfinserv.com</p>
-           </div>
-        </div>
-      </div>
-      
-      <form className="bg-white p-8 rounded-lg shadow-md space-y-4" onSubmit={(e) => e.preventDefault()}>
-        <h3 className="text-xl font-bold text-slate-800 mb-2">Send us a message</h3>
-        <div>
-          <label className="block text-sm font-medium text-slate-700">Name</label>
-          <input type="text" className="mt-1 block w-full rounded-md border-slate-300 shadow-sm border p-2" placeholder="Your Name" />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-slate-700">Email</label>
-          <input type="email" className="mt-1 block w-full rounded-md border-slate-300 shadow-sm border p-2" placeholder="you@example.com" />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-slate-700">Message</label>
-          <textarea rows="4" className="mt-1 block w-full rounded-md border-slate-300 shadow-sm border p-2" placeholder="How can we help?"></textarea>
-        </div>
-        <button className="w-full bg-yellow-500 text-slate-900 font-bold py-2 rounded hover:bg-yellow-400 transition">
-          Submit
-        </button>
-      </form>
-    </div>
-  </div>
-);
-
-const Footer = () => (
-  <footer className="bg-slate-900 text-slate-400 py-8 border-t border-slate-800">
-    <div className="max-w-7xl mx-auto px-4 text-center">
-      <div className="mb-4">
-        <span className="font-bold text-xl text-white">MOONSHOT FINSERV</span>
-      </div>
-      <p className="text-xs mb-4 max-w-4xl mx-auto leading-relaxed">
-        <strong>AMFI Registered Mutual Fund Distributor</strong> | ARN: XXXXXX <br/>
-        <strong>Disclaimer:</strong> Mutual Fund investments are subject to market risks, read all scheme related documents carefully. The NAVs of the schemes may go up or down depending upon the factors and forces affecting the securities market including the fluctuations in the interest rates. The past performance of the mutual funds is not necessarily indicative of future performance of the schemes.
-      </p>
-      <div className="flex justify-center space-x-6 text-sm">
-        <a href="#" className="hover:text-white">Privacy Policy</a>
-        <a href="#" className="hover:text-white">Terms of Use</a>
-        <a href="#" className="hover:text-white">Sitemap</a>
-      </div>
-      <p className="mt-6 text-xs">&copy; {new Date().getFullYear()} Moonshot Finserv. All rights reserved.</p>
-    </div>
-  </footer>
-);
-
-// --- Main App Component ---
-
-const App = () => {
-  const [activeTab, setActiveTab] = useState('home');
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  // Scroll to top on tab change
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [activeTab]);
-
-  const renderContent = () => {
-    switch (activeTab) {
-      case 'home': return <HomeSection setActiveTab={setActiveTab} />;
-      case 'about': return <AboutSection />;
-      case 'calculators': return <CalculatorsSection />;
-      case 'testimonials': return <TestimonialsSection />;
-      case 'career': return <CareerSection />;
-      case 'contact': return <ContactSection />;
-      default: return <HomeSection setActiveTab={setActiveTab} />;
-    }
+  const calculate = () => {
+    const val = investment * Math.pow((1 + rate / 100), years);
+    setResult({ invested: investment, value: Math.round(val) });
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
-      <Navbar 
-        activeTab={activeTab} 
-        setActiveTab={setActiveTab} 
-        mobileMenuOpen={mobileMenuOpen}
-        setMobileMenuOpen={setMobileMenuOpen}
-      />
-      
-      <main className="flex-grow">
-        {renderContent()}
-      </main>
+    <div>
+      <h3 className="text-xl font-bold text-blue-900 mb-6 flex items-center gap-2"><DollarSign /> Lumpsum Calculator</h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="space-y-4">
+          <InputField label="Lumpsum Investment" value={investment} onChange={setInvestment} prefix="₹" />
+          <InputField label="Expected Return Rate (p.a)" value={rate} onChange={setRate} suffix="%" />
+          <InputField label="Time Period" value={years} onChange={setYears} suffix="Years" />
+          <button onClick={calculate} className="w-full bg-blue-900 text-white py-3 rounded-lg hover:bg-blue-800 transition-colors">Calculate</button>
+        </div>
+        <div className="bg-slate-50 p-6 rounded-xl flex flex-col justify-center items-center text-center">
+          {!result ? <p className="text-slate-500">Enter details to see projection</p> : (
+            <div className="w-full space-y-4">
+              <div>
+                <p className="text-sm text-slate-500">Total Invested</p>
+                <p className="text-2xl font-bold text-slate-700">₹ {parseInt(result.invested).toLocaleString()}</p>
+              </div>
+              <div>
+                <p className="text-sm text-slate-500">Future Value</p>
+                <p className="text-4xl font-extrabold text-green-600">₹ {result.value.toLocaleString()}</p>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
 
-      <Footer />
+const GoalCalculator = ({ title, icon, defaultCost, defaultYears }) => {
+  const [currentCost, setCurrentCost] = useState(defaultCost);
+  const [years, setYears] = useState(defaultYears);
+  const [inflation, setInflation] = useState(6);
+  const [returnRate, setReturnRate] = useState(12);
+  const [result, setResult] = useState(null);
+
+  const calculate = () => {
+    // 1. Calculate Future Cost of the Goal
+    const futureCost = currentCost * Math.pow((1 + inflation / 100), years);
+
+    // 2. Calculate Monthly SIP Required to achieve Future Cost
+    // Formula: M = FV * i / ((1+i)^n - 1) * (1+i)  -- usually investing at start of month
+    // i = monthly rate, n = months
+    const i = returnRate / 12 / 100;
+    const n = years * 12;
+    
+    // Future Value of SIP formula inverted:
+    // FV = P * [ (1+i)^n - 1 ] / i * (1+i)
+    // P = FV * i / ( (1+i) * [ (1+i)^n - 1 ] )
+    
+    const sipRequired = (futureCost * i) / ((1 + i) * (Math.pow(1 + i, n) - 1));
+
+    setResult({ 
+      futureCost: Math.round(futureCost), 
+      sip: Math.round(sipRequired) 
+    });
+  };
+
+  return (
+    <div>
+      <h3 className="text-xl font-bold text-blue-900 mb-6 flex items-center gap-2">{icon} {title} Planner</h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="space-y-4">
+          <InputField label="Current Cost of Goal" value={currentCost} onChange={setCurrentCost} prefix="₹" />
+          <InputField label="Years to Goal" value={years} onChange={setYears} suffix="Years" />
+          <InputField label="Expected Inflation" value={inflation} onChange={setInflation} suffix="%" />
+          <InputField label="Expected Investment Return" value={returnRate} onChange={setReturnRate} suffix="%" />
+          <button onClick={calculate} className="w-full bg-blue-900 text-white py-3 rounded-lg hover:bg-blue-800 transition-colors">Plan My Goal</button>
+        </div>
+        <div className="bg-slate-50 p-6 rounded-xl flex flex-col justify-center items-center text-center">
+          {!result ? <p className="text-slate-500">Enter details to see your plan</p> : (
+            <div className="w-full space-y-6">
+              <div className="bg-white p-4 rounded-lg shadow-sm">
+                <p className="text-sm text-slate-500 mb-1">Current Cost</p>
+                <p className="text-lg font-semibold text-slate-700">₹ {parseInt(currentCost).toLocaleString()}</p>
+                <div className="my-2 border-t border-slate-100"></div>
+                <p className="text-sm text-slate-500 mb-1">Projected Cost after {years} years</p>
+                <p className="text-2xl font-bold text-blue-900">₹ {result.futureCost.toLocaleString()}</p>
+                <p className="text-xs text-red-400 mt-1 flex items-center justify-center gap-1">
+                  (Includes {inflation}% Inflation)
+                </p>
+              </div>
+              
+              <div>
+                <p className="text-sm text-slate-600 font-medium mb-2">Monthly SIP Required</p>
+                <div className="bg-green-100 text-green-800 px-6 py-4 rounded-xl text-3xl font-extrabold inline-block">
+                  ₹ {result.sip.toLocaleString()}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
 
 export default App;
-
-
